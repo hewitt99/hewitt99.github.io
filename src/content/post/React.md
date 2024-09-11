@@ -2,10 +2,9 @@
 title: 'My First Post'
 description: 'This post is purely for testing the table of content, which should not be rendered'
 publishDate: '03 Jul 2024'
-tags: ['test', 'toc']
+tags: ['react']
+draft: true
 ---
-
-If this is working correctly, this post should only be accessible in a dev environment, as well as any tags that are unique to this post.
 
 # React
 
