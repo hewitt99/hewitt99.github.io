@@ -205,8 +205,6 @@ export const SITE_CONFIG: SiteConfig = {
 - 语义化的 HTML 结构
 - Meta 标签优化
 - Open Graph 支持
-- Twitter Card 支持
-- 站点地图自动生成
 - 规范化 URL
 
 ## 📊 性能优化
@@ -245,7 +243,7 @@ MIT License
 ## 📞 联系方式
 
 - GitHub: [@hewitt99](https://github.com/hewitt99)
-- Email: hewitt@example.com
+- Email: hewitt.99@qq.com
 
 ---
 

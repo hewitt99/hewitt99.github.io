@@ -3,9 +3,9 @@ title: 'Hello World - 我的第一篇博客文章'
 description: '欢迎来到我的博客！这是我的第一篇文章，介绍了这个博客的目标和我的写作计划。'
 publishDate: '2024-01-15'
 category: '随笔'
-tags: ['博客', '开始', '介绍']
+tags: ['开始']
 author: 'Hewitt'
-heroImage: '/images/Hello_World.jpg'
+heroImage: '/images/hello-world.jpg'
 ---
 
 # 欢迎来到我的博客！
@@ -23,7 +23,7 @@ heroImage: '/images/Hello_World.jpg'
 
 ## 博客内容规划
 
-我计划在这个博客中分享以下类型的内容：
+我希望博客内容以实战为导向——从理论到实现，言之有物。计划在这个博客中分享以下类型的内容：
 
 ### 技术文章
 
@@ -50,17 +50,15 @@ heroImage: '/images/Hello_World.jpg'
 
 这个博客使用了以下技术栈：
 
-```javascript
-const techStack = {
-	framework: 'Astro',
-	styling: 'Tailwind CSS',
-	language: 'TypeScript',
-	deployment: 'Vercel',
-	content: 'Markdown'
-}
+## 技术栈介绍
 
-console.log('博客技术栈:', techStack)
-```
+| 类别     | 使用技术     |
+| -------- | ------------ |
+| 框架     | Astro        |
+| 样式     | Tailwind CSS |
+| 语言     | TypeScript   |
+| 部署平台 | Vercel       |
+| 内容格式 | Markdown     |
 
 ### 为什么选择 Astro？
 
