@@ -86,7 +86,7 @@ Astro 是一个现代的静态站点生成器，它有以下优势：
 感谢你阅读我的第一篇博客文章！如果你对某个话题特别感兴趣，或者有任何建议和反馈，欢迎通过以下方式联系我：
 
 - GitHub: [@hewitt99](https://github.com/hewitt99)
-- Email: hewitt@example.com
+- Email: hewitt.99@qq.com
 
 让我们一起在技术的道路上不断学习和成长！
 

@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import { SITE_CONFIG } from '../config'
+import '../styles/global.css'
 
 export interface Props {
 	title?: string
@@ -52,9 +53,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 			rel='stylesheet'
 		/>
 
-		<!-- Styles -->
-		<link rel='stylesheet' href='/src/styles/global.css' />
-
 		<!-- Theme Script (prevent FOUC) -->
 		<script is:inline>
 			const theme = localStorage.getItem('theme') || 'light'
@@ -77,4 +75,3 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 		<!-- 在这里添加 Google Analytics 或其他分析工具 -->
 	</body>
 </html>
-

@@ -7,8 +7,7 @@ export const SITE_CONFIG: SiteConfig = {
 	url: 'https://hewitt99.vercel.app',
 	social: {
 		github: 'https://github.com/hewitt99',
-		twitter: 'https://twitter.com/hewitt99',
-		email: 'hewitt@example.com'
+		email: 'hewitt.99@qq.com'
 	},
 	postsPerPage: 10
 }

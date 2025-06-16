@@ -126,21 +126,25 @@
   
   /* Apple-style Icon Buttons */
   .apple-button {
-    @apply bg-gray-100/60 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 backdrop-blur-xl border-0;
+    @apply bg-gray-100/80 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 backdrop-blur-xl;
     border-radius: 10px;
     box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .dark .apple-button {
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
   
   .apple-button:hover {
-    @apply bg-gray-200/70 dark:bg-gray-600/70;
+    @apply bg-gray-300/80 dark:bg-gray-600/70;
     transform: translateY(-1px);
     box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      0 4px 12px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 }
 
