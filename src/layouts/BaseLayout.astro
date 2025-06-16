@@ -1,35 +1,80 @@
 ---
-import type { SiteMeta } from '@/types'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { SITE_CONFIG } from '../config'
 
-import BaseHead from '@/components/BaseHead.astro'
-import Footer from '@/components/layout/Footer.astro'
-import Header from '@/components/layout/Header.astro'
-import ThemeProvider from '@/components/ThemeProvider.astro'
-
-import { siteConfig } from '@/site-config'
-
-interface Props {
-	meta: SiteMeta
+export interface Props {
+	title?: string
+	description?: string
+	image?: string
+	article?: boolean
 }
 
-const {
-	meta: { articleDate, description = siteConfig.description, ogImage, title }
-} = Astro.props
+const { title, description = SITE_CONFIG.description, image, article = false } = Astro.props
+
+const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 ---
 
-<html lang={siteConfig.lang} class=''>
+<!doctype html>
+<html lang='zh-CN' class='scroll-smooth'>
 	<head>
-		<BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+		<meta name='generator' content={Astro.generator} />
+
+		<!-- Primary Meta Tags -->
+		<title>{pageTitle}</title>
+		<meta name='title' content={pageTitle} />
+		<meta name='description' content={description} />
+		<link rel='canonical' href={canonicalURL} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property='og:type' content={article ? 'article' : 'website'} />
+		<meta property='og:url' content={canonicalURL} />
+		<meta property='og:title' content={pageTitle} />
+		<meta property='og:description' content={description} />
+		{image && <meta property='og:image' content={new URL(image, Astro.site)} />}
+
+		<!-- Twitter -->
+		<meta property='twitter:card' content='summary_large_image' />
+		<meta property='twitter:url' content={canonicalURL} />
+		<meta property='twitter:title' content={pageTitle} />
+		<meta property='twitter:description' content={description} />
+		{image && <meta property='twitter:image' content={new URL(image, Astro.site)} />}
+
+		<!-- Fonts -->
+		<link rel='preconnect' href='https://fonts.googleapis.com' />
+		<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+		<link
+			href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+			rel='stylesheet'
+		/>
+
+		<!-- Styles -->
+		<link rel='stylesheet' href='/src/styles/global.css' />
+
+		<!-- Theme Script (prevent FOUC) -->
+		<script is:inline>
+			const theme = localStorage.getItem('theme') || 'light'
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark')
+			}
+		</script>
 	</head>
 
-	<body class='flex justify-center bg-background'>
-		<ThemeProvider />
-		<main
-			class='flex min-h-screen w-screen max-w-[60rem] flex-col items-center px-6 pb-10 pt-7 font-satoshi text-[0.92rem] leading-relaxed sm:px-10 lg:px-10'
-		>
-			<Header />
+	<body class='flex min-h-screen flex-col'>
+		<Header />
+
+		<main class='flex-grow'>
 			<slot />
-			<Footer />
 		</main>
+
+		<Footer />
+
+		<!-- Analytics (可选) -->
+		<!-- 在这里添加 Google Analytics 或其他分析工具 -->
 	</body>
 </html>
+

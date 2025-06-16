@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import { processPostData, getCategoriesFromPosts, slugify } from '../../utils'
+
+export async function getStaticPaths() {
+	const allPosts = await Astro.glob('../../content/blog/*.{md,mdx}')
+	const posts = processPostData(allPosts)
+	const categories = getCategoriesFromPosts(posts)
+
+	return categories.map((category) => ({
+		params: { category: category.slug },
+		props: {
+			category,
+			posts: posts.filter((post) => slugify(post.category) === category.slug)
+		}
+	}))
+}
+
+const { category, posts } = Astro.props
+---
+
+<BaseLayout title={`${category.name} 分类`} description={`浏览 ${category.name} 分类下的所有文章`}>
+	<div class='mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8'>
+		<!-- Page Header -->
+		<header class='mb-12 text-center'>
+			<nav class='mb-4'>
+				<ol
+					class='flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400'
+				>
+					<li>
+						<a href='/' class='transition-colors hover:text-blue-600 dark:hover:text-blue-400'>
+							首页
+						</a>
+					</li>
+					<li>
+						<svg class='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+							<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'
+							></path>
+						</svg>
+					</li>
+					<li>
+						<a
+							href='/categories'
+							class='transition-colors hover:text-blue-600 dark:hover:text-blue-400'
+						>
+							分类
+						</a>
+					</li>
+					<li>
+						<svg class='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+							<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'
+							></path>
+						</svg>
+					</li>
+					<li class='font-medium text-gray-900 dark:text-white'>
+						{category.name}
+					</li>
+				</ol>
+			</nav>
+
+			<h1 class='mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl'>
+				{category.name}
+			</h1>
+			<p class='text-xl text-gray-600 dark:text-gray-400'>
+				共 {posts.length} 篇文章
+			</p>
+		</header>
+
+		<!-- Posts Grid -->
+		{
+			posts.length > 0 ? (
+				<div class='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
+					{posts.map((post) => (
+						<ArticleCard post={post} />
+					))}
+				</div>
+			) : (
+				<div class='py-16 text-center'>
+					<svg
+						class='mx-auto mb-4 h-16 w-16 text-gray-400 dark:text-gray-600'
+						fill='none'
+						stroke='currentColor'
+						viewBox='0 0 24 24'
+					>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+						/>
+					</svg>
+					<h3 class='mb-2 text-xl font-medium text-gray-900 dark:text-white'>该分类下暂无文章</h3>
+					<p class='mb-6 text-gray-600 dark:text-gray-400'>
+						{category.name} 分类下还没有发布任何文章。
+					</p>
+					<a href='/categories' class='btn-primary'>
+						浏览其他分类
+					</a>
+				</div>
+			)
+		}
+	</div>
+</BaseLayout>
+

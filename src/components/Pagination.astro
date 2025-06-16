@@ -1,0 +1,124 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+  nextPage: number | null;
+  prevPage: number | null;
+  baseUrl?: string;
+}
+
+const { currentPage, totalPages, hasNext, hasPrev, nextPage, prevPage, baseUrl = '' } = Astro.props;
+
+// Generate page numbers to show
+function getPageNumbers(current: number, total: number) {
+  const pages: (number | string)[] = [];
+  
+  if (total <= 7) {
+    // Show all pages if total is 7 or less
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Always show first page
+    pages.push(1);
+    
+    if (current <= 4) {
+      // Show pages 2-5 and ellipsis
+      for (let i = 2; i <= 5; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(total);
+    } else if (current >= total - 3) {
+      // Show ellipsis and last 5 pages
+      pages.push('...');
+      for (let i = total - 4; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show ellipsis, current page with neighbors, ellipsis, last page
+      pages.push('...');
+      for (let i = current - 1; i <= current + 1; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(total);
+    }
+  }
+  
+  return pages;
+}
+
+const pageNumbers = getPageNumbers(currentPage, totalPages);
+---
+
+{totalPages > 1 && (
+  <nav class="flex justify-center items-center space-x-2 mt-8" aria-label="分页导航">
+    <!-- Previous Button -->
+    {hasPrev ? (
+      <a
+        href={prevPage === 1 ? baseUrl || '/' : `${baseUrl}/page/${prevPage}`}
+        class="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
+        aria-label="上一页"
+      >
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        上一页
+      </a>
+    ) : (
+      <span class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-300 rounded-lg cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        上一页
+      </span>
+    )}
+    
+    <!-- Page Numbers -->
+    <div class="flex space-x-1">
+      {pageNumbers.map((page) => (
+        page === '...' ? (
+          <span class="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+            ...
+          </span>
+        ) : page === currentPage ? (
+          <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg cursor-default">
+            {page}
+          </span>
+        ) : (
+          <a
+            href={page === 1 ? baseUrl || '/' : `${baseUrl}/page/${page}`}
+            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
+            aria-label={`第 ${page} 页`}
+          >
+            {page}
+          </a>
+        )
+      ))}
+    </div>
+    
+    <!-- Next Button -->
+    {hasNext ? (
+      <a
+        href={`${baseUrl}/page/${nextPage}`}
+        class="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
+        aria-label="下一页"
+      >
+        下一页
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    ) : (
+      <span class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-300 rounded-lg cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+        下一页
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </span>
+    )}
+  </nav>
+)} 

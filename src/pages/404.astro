@@ -1,46 +1,142 @@
 ---
-import PageLayout from '@/layouts/BaseLayout.astro'
-import Button from '@/components/Button.astro'
-
-const meta = {
-	description: 'Not found',
-	title: '404'
-}
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
-<PageLayout meta={meta}>
-	<a
-		href='https://github.com/srleom/astro-theme-resume.git'
-		class='flex flex-row items-center gap-x-3 rounded-3xl border border-input px-4 py-2 text-sm shadow-sm transition-all hover:shadow-md'
-	>
-		<span class='relative flex items-center justify-center'>
-			<span
-				class='absolute inline-flex h-2 w-2 animate-ping rounded-full border border-green-400 bg-green-400 opacity-75'
-			></span>
-			<span class='relative inline-flex h-2 w-2 rounded-full bg-green-400'></span>
-		</span>
-
-		<p class='font-medium'>Get free template</p>
-	</a>
-	<div class='px-4 py-10 text-center sm:px-6 lg:px-8'>
-		<h1 class='block text-7xl font-bold sm:text-9xl'>404</h1>
-		<p class='mt-3 text-muted-foreground'>Oops, something went wrong.</p>
-		<p class=''>Sorry, we couldn't find your page.</p>
-		<Button title='Back to home' href='/' style='button' class='mt-5'>
-			<svg
-				xmlns='http://www.w3.org/2000/svg'
-				width='14'
-				height='14'
-				viewBox='0 0 24 24'
-				slot='icon-after'
-				class='-scale-x-100'
-			>
-				<path
-					fill='currentColor'
-					d='m6.921 12.5l5.792 5.792L12 19l-7-7l7-7l.713.708L6.921 11.5H19v1z'
+<BaseLayout title='页面未找到' description='抱歉，您访问的页面不存在'>
+	<div class='mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8'>
+		<div class='text-center'>
+			<!-- 404 Illustration -->
+			<div class='mb-8'>
+				<div class='mb-4 text-8xl font-bold text-gray-200 dark:text-gray-700 md:text-9xl'>404</div>
+				<svg
+					class='mx-auto h-32 w-32 text-gray-400 dark:text-gray-600'
+					fill='none'
+					stroke='currentColor'
+					viewBox='0 0 24 24'
 				>
-				</path>
-			</svg>
-		</Button>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+					></path>
+				</svg>
+			</div>
+
+			<!-- Error Message -->
+			<h1 class='mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl'>页面未找到</h1>
+			<p class='mx-auto mb-8 max-w-2xl text-xl text-gray-600 dark:text-gray-400'>
+				抱歉，您访问的页面不存在或已被移动。请检查URL是否正确，或者返回首页浏览其他内容。
+			</p>
+
+			<!-- Action Buttons -->
+			<div class='mb-12 flex flex-col justify-center gap-4 sm:flex-row'>
+				<a href='/' class='btn-primary'> 返回首页 </a>
+				<a href='/categories' class='btn-secondary'> 浏览分类 </a>
+				<button onclick='history.back()' class='btn-secondary'> 返回上页 </button>
+			</div>
+
+			<!-- Search Suggestions -->
+			<div class='card mx-auto max-w-2xl p-8'>
+				<h2 class='mb-6 text-2xl font-bold text-gray-900 dark:text-white'>您可能在寻找：</h2>
+				<div class='grid grid-cols-1 gap-4 text-left md:grid-cols-2'>
+					<a
+						href='/'
+						class='flex items-center rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
+					>
+						<svg
+							class='mr-3 h-5 w-5 text-blue-600 dark:text-blue-400'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2'
+								d='M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z'></path>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2'
+								d='M8 5a2 2 0 012-2h2a2 2 0 012 2v0M8 5a2 2 0 012-2h2a2 2 0 012 2v0'></path>
+						</svg>
+						<div>
+							<div class='font-medium text-gray-900 dark:text-white'>最新文章</div>
+							<div class='text-sm text-gray-600 dark:text-gray-400'>查看最新发布的内容</div>
+						</div>
+					</a>
+
+					<a
+						href='/categories'
+						class='flex items-center rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
+					>
+						<svg
+							class='mr-3 h-5 w-5 text-green-600 dark:text-green-400'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2'
+								d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+							></path>
+						</svg>
+						<div>
+							<div class='font-medium text-gray-900 dark:text-white'>文章分类</div>
+							<div class='text-sm text-gray-600 dark:text-gray-400'>按主题浏览文章</div>
+						</div>
+					</a>
+
+					<a
+						href='/tags'
+						class='flex items-center rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
+					>
+						<svg
+							class='mr-3 h-5 w-5 text-purple-600 dark:text-purple-400'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2'
+								d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'
+							></path>
+						</svg>
+						<div>
+							<div class='font-medium text-gray-900 dark:text-white'>标签云</div>
+							<div class='text-sm text-gray-600 dark:text-gray-400'>通过标签发现内容</div>
+						</div>
+					</a>
+
+					<a
+						href='/about'
+						class='flex items-center rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
+					>
+						<svg
+							class='mr-3 h-5 w-5 text-orange-600 dark:text-orange-400'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2'
+								d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'></path>
+						</svg>
+						<div>
+							<div class='font-medium text-gray-900 dark:text-white'>关于我</div>
+							<div class='text-sm text-gray-600 dark:text-gray-400'>了解博主和博客</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
 	</div>
-</PageLayout>
+</BaseLayout>
+

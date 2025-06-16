@@ -1,0 +1,205 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import { formatDate } from '../utils'
+
+export interface Props {
+	frontmatter: {
+		title: string
+		description: string
+		publishDate: string
+		updatedDate?: string
+		heroImage?: string
+		category: string
+		tags: string[]
+		author?: string
+	}
+}
+
+const { frontmatter } = Astro.props
+const publishDate = new Date(frontmatter.publishDate)
+const updatedDate = frontmatter.updatedDate ? new Date(frontmatter.updatedDate) : null
+---
+
+<BaseLayout
+	title={frontmatter.title}
+	description={frontmatter.description}
+	image={frontmatter.heroImage}
+	article={true}
+>
+	<article class='mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8'>
+		<!-- Article Header -->
+		<header class='mb-8'>
+			<!-- Category -->
+			<div class='mb-4'>
+				<a
+					href={`/categories/${frontmatter.category}`}
+					class='inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 transition-colors hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800'
+				>
+					{frontmatter.category}
+				</a>
+			</div>
+
+			<!-- Title -->
+			<h1 class='mb-6 text-4xl font-bold leading-tight text-gray-900 dark:text-white md:text-5xl'>
+				{frontmatter.title}
+			</h1>
+
+			<!-- Meta Info -->
+			<div class='mb-6 flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400'>
+				<!-- Publish Date -->
+				<time datetime={publishDate.toISOString()} class='flex items-center'>
+					<svg class='mr-2 h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+						></path>
+					</svg>
+					发布于 {formatDate(publishDate)}
+				</time>
+
+				<!-- Updated Date -->
+				{
+					updatedDate && (
+						<time datetime={updatedDate.toISOString()} class='flex items-center'>
+							<svg class='mr-2 h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+								<path
+									stroke-linecap='round'
+									stroke-linejoin='round'
+									stroke-width='2'
+									d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+								/>
+							</svg>
+							更新于 {formatDate(updatedDate)}
+						</time>
+					)
+				}
+
+				<!-- Author -->
+				{
+					frontmatter.author && (
+						<span class='flex items-center'>
+							<svg class='mr-2 h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+								<path
+									stroke-linecap='round'
+									stroke-linejoin='round'
+									stroke-width='2'
+									d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+								/>
+							</svg>
+							{frontmatter.author}
+						</span>
+					)
+				}
+			</div>
+
+			<!-- Tags -->
+			{
+				frontmatter.tags.length > 0 && (
+					<div class='mb-8 flex flex-wrap gap-2'>
+						{frontmatter.tags.map((tag) => (
+							<a href={`/tags/${tag}`} class='tag'>
+								#{tag}
+							</a>
+						))}
+					</div>
+				)
+			}
+
+			<!-- Hero Image -->
+			{
+				frontmatter.heroImage && (
+					<div class='mb-8'>
+						<img
+							src={frontmatter.heroImage}
+							alt={frontmatter.title}
+							class='h-64 w-full rounded-lg object-cover shadow-lg md:h-96'
+						/>
+					</div>
+				)
+			}
+		</header>
+
+		<!-- Article Content -->
+		<div class='prose-custom'>
+			<slot />
+		</div>
+
+		<!-- Article Footer -->
+		<footer class='mt-12 border-t border-gray-200 pt-8 dark:border-gray-700'>
+			<div class='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+				<!-- Tags (repeated for better UX) -->
+				{
+					frontmatter.tags.length > 0 && (
+						<div>
+							<h3 class='mb-2 text-sm font-medium text-gray-900 dark:text-white'>标签</h3>
+							<div class='flex flex-wrap gap-2'>
+								{frontmatter.tags.map((tag) => (
+									<a href={`/tags/${tag}`} class='tag'>
+										#{tag}
+									</a>
+								))}
+							</div>
+						</div>
+					)
+				}
+
+				<!-- Share Buttons (可选) -->
+				<div>
+					<h3 class='mb-2 text-sm font-medium text-gray-900 dark:text-white'>分享</h3>
+					<div class='flex space-x-2'>
+						<button
+							onclick="navigator.share ? navigator.share({title: document.title, url: window.location.href}) : window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(document.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')"
+							class='p-2 text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400'
+							aria-label='分享到 Twitter'
+						>
+							<svg class='h-5 w-5' fill='currentColor' viewBox='0 0 24 24'>
+								<path
+									d='M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z'
+								></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</article>
+
+	<!-- Back to Top Button -->
+	<button
+		id='back-to-top'
+		class='invisible fixed bottom-8 right-8 z-50 rounded-full bg-blue-600 p-3 text-white opacity-0 shadow-lg transition-all duration-300 hover:bg-blue-700'
+		aria-label='回到顶部'
+	>
+		<svg class='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+			<path
+				stroke-linecap='round'
+				stroke-linejoin='round'
+				stroke-width='2'
+				d='M5 10l7-7m0 0l7 7m-7-7v18'></path>
+		</svg>
+	</button>
+</BaseLayout>
+
+<script>
+	// Back to top functionality
+	const backToTopButton = document.getElementById('back-to-top')
+
+	window.addEventListener('scroll', () => {
+		if (window.scrollY > 300) {
+			backToTopButton?.classList.remove('opacity-0', 'invisible')
+			backToTopButton?.classList.add('opacity-100', 'visible')
+		} else {
+			backToTopButton?.classList.add('opacity-0', 'invisible')
+			backToTopButton?.classList.remove('opacity-100', 'visible')
+		}
+	})
+
+	backToTopButton?.addEventListener('click', () => {
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth'
+		})
+	})
+</script>
