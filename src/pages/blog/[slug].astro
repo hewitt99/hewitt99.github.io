@@ -1,5 +1,6 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro'
+import { calculateReadingTime, calculateWordCount } from '../../utils'
 
 export async function getStaticPaths() {
 	const allPosts: any[] = await Astro.glob('../../content/blog/*.{md,mdx}')
@@ -18,8 +19,13 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props
 const { Content, frontmatter } = post
+
+// 计算文章统计信息
+const content = post.compiledContent()
+const readingTime = calculateReadingTime(content)
+const wordCount = calculateWordCount(content)
 ---
 
-<BlogLayout frontmatter={frontmatter}>
+<BlogLayout frontmatter={frontmatter} readingTime={readingTime} wordCount={wordCount}>
 	<Content />
 </BlogLayout>

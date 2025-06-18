@@ -10,6 +10,7 @@ export interface BlogPost {
 	draft?: boolean
 	author?: string
 	readingTime?: number
+	wordCount?: number
 }
 
 export interface Category {

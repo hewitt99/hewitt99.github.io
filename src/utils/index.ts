@@ -39,6 +39,29 @@ export function calculateReadingTime(content: string): number {
 	return Math.ceil(words / wordsPerMinute)
 }
 
+// 计算字数统计
+export function calculateWordCount(content: string): number {
+	if (!content || !content.trim()) {
+		return 0
+	}
+
+	// 移除 HTML 标签
+	const cleanContent = content.replace(/<[^>]*>/g, '')
+
+	// 统计中文字符数量
+	const chineseChars = (cleanContent.match(/[\u4e00-\u9fa5]/g) || []).length
+
+	// 统计英文单词数量（按空格分割）
+	const englishWords = cleanContent
+		.replace(/[\u4e00-\u9fa5]/g, '') // 移除中文字符
+		.trim()
+		.split(/\s+/)
+		.filter((word) => word.length > 0).length
+
+	// 中文字符 + 英文单词总数
+	return chineseChars + englishWords
+}
+
 // 分页
 export function paginate<T>(items: T[], page: number, perPage: number) {
 	const totalPages = Math.ceil(items.length / perPage)
@@ -59,25 +82,29 @@ export function paginate<T>(items: T[], page: number, perPage: number) {
 // 处理文章数据的辅助函数
 export function processPostData(posts: any[]): BlogPost[] {
 	return posts
-		.map((post) => ({
-			slug:
-				post.file
-					.split('/')
-					.pop()
-					?.replace(/\.(md|mdx)$/, '') || '',
-			title: post.frontmatter.title,
-			description: post.frontmatter.description,
-			publishDate: new Date(post.frontmatter.publishDate),
-			updatedDate: post.frontmatter.updatedDate
-				? new Date(post.frontmatter.updatedDate)
-				: undefined,
-			heroImage: post.frontmatter.heroImage,
-			category: post.frontmatter.category,
-			tags: post.frontmatter.tags || [],
-			draft: post.frontmatter.draft || false,
-			author: post.frontmatter.author,
-			readingTime: calculateReadingTime(post.compiledContent())
-		}))
+		.map((post) => {
+			const content = post.compiledContent()
+			return {
+				slug:
+					post.file
+						.split('/')
+						.pop()
+						?.replace(/\.(md|mdx)$/, '') || '',
+				title: post.frontmatter.title,
+				description: post.frontmatter.description,
+				publishDate: new Date(post.frontmatter.publishDate),
+				updatedDate: post.frontmatter.updatedDate
+					? new Date(post.frontmatter.updatedDate)
+					: undefined,
+				heroImage: post.frontmatter.heroImage,
+				category: post.frontmatter.category,
+				tags: post.frontmatter.tags || [],
+				draft: post.frontmatter.draft || false,
+				author: post.frontmatter.author,
+				readingTime: calculateReadingTime(content),
+				wordCount: calculateWordCount(content)
+			}
+		})
 		.filter((post) => !post.draft)
 		.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime())
 }
