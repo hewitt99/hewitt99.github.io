@@ -4,8 +4,8 @@ import ArticleCard from '../../components/ArticleCard.astro'
 import { processPostData, getTagsFromPosts, slugify } from '../../utils'
 
 export async function getStaticPaths() {
-	const allPosts = await Astro.glob('../../content/blog/*.{md,mdx}')
-	const posts = processPostData(allPosts)
+	const allPosts = Object.values(import.meta.glob('../../content/blog/*.{md,mdx}', { eager: true }))
+	const posts = await processPostData(allPosts)
 	const tags = getTagsFromPosts(posts)
 
 	return tags.map((tag) => ({
@@ -99,4 +99,3 @@ const { tag, posts } = Astro.props
 		}
 	</div>
 </BaseLayout>
-

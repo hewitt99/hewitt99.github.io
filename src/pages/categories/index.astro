@@ -3,8 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
 import { processPostData, getCategoriesFromPosts } from '../../utils'
 
 // 获取所有文章和分类
-const allPosts = await Astro.glob('../../content/blog/*.{md,mdx}')
-const posts = processPostData(allPosts)
+const allPosts = Object.values(import.meta.glob('../../content/blog/*.{md,mdx}', { eager: true }))
+const posts = await processPostData(allPosts)
 const categories = getCategoriesFromPosts(posts)
 ---
 

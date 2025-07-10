@@ -4,8 +4,8 @@ import ArticleCard from '../../components/ArticleCard.astro'
 import { processPostData, getCategoriesFromPosts, slugify } from '../../utils'
 
 export async function getStaticPaths() {
-	const allPosts = await Astro.glob('../../content/blog/*.{md,mdx}')
-	const posts = processPostData(allPosts)
+	const allPosts = Object.values(import.meta.glob('../../content/blog/*.{md,mdx}', { eager: true }))
+	const posts = await processPostData(allPosts)
 	const categories = getCategoriesFromPosts(posts)
 
 	return categories.map((category) => ({
@@ -102,4 +102,3 @@ const { category, posts } = Astro.props
 		}
 	</div>
 </BaseLayout>
-

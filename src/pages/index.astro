@@ -6,8 +6,8 @@ import { processPostData, paginate } from '../utils';
 import { SITE_CONFIG } from '../config';
 
 // 获取所有文章
-const allPosts = await Astro.glob('../content/blog/*.{md,mdx}');
-const posts = processPostData(allPosts);
+const allPosts = Object.values(import.meta.glob('../content/blog/*.{md,mdx}', { eager: true }));
+const posts = await processPostData(allPosts);
 
 // 分页
 const currentPage = 1;

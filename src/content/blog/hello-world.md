@@ -5,7 +5,7 @@ publishDate: '2024-01-15'
 category: '随笔'
 tags: ['开始']
 author: 'Hewitt'
-heroImage: '/images/hello-world.jpg'
+heroImage: 'https://img.picui.cn/free/2025/07/09/686e44771b4f3.jpg'
 ---
 
 # 欢迎来到我的博客！

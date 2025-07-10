@@ -3,8 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
 import { processPostData, getTagsFromPosts } from '../../utils'
 
 // 获取所有文章和标签
-const allPosts = await Astro.glob('../../content/blog/*.{md,mdx}')
-const posts = processPostData(allPosts)
+const allPosts = Object.values(import.meta.glob('../../content/blog/*.{md,mdx}', { eager: true }))
+const posts = await processPostData(allPosts)
 const tags = getTagsFromPosts(posts)
 ---
 

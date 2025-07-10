@@ -8,88 +8,42 @@ author: 'Hewitt'
 slug: 'enterprise-bi-platform'
 ---
 
-> 初来公司，到手的第一个项目就是 BI，下面我将分享我们团队从零开始构建一个企业级商业智能（BI）数据可视化平台的完整技术实践，涵盖架构设计、核心技术选型、关键问题解决方案以及踩坑经验总结。
+> 初来公司，到手的第一个项目就是 BI，下面我将分享笔者团队从零开始构建一个企业级商业智能（BI）数据可视化平台的完整技术实践，涵盖架构设计、核心技术选型、关键问题解决方案以及踩坑经验总结。
 
 ## 背景与挑战
 
-我们面临的核心挑战包括：
+面临的核心挑战包括：
 
 - **功能复杂性**：需要支持 20+种图表类型，满足不同业务场景
 - **交互丰富性**：实现下钻、联动、筛选等高级分析功能
 - **性能要求**：处理大数据量、多图表及其联动时保持流畅的用户体验
 - **扩展性**：支持快速添加新的图表类型和业务功能
 
-最终公司的前辈构建了一个基于 Vue2.js 的现代化 BI 平台，我们在此基础上进行改造和优化。
+最终公司的前辈构建了一个基于 Vue2.js 的现代化 BI 平台，笔者在此基础上进行改造和优化。
 
 ## 技术架构设计
 
 ### 整体架构思路
 
-我们采用了经典的三面板布局设计，结合分层架构模式，确保各层职责清晰、低耦合高内聚：
+采用了经典的三面板布局设计（大部分低码平台都是如此），结合分层架构模式，确保各层职责清晰、低耦合高内聚：
 
 #### 三面板布局架构
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        BI 可视化平台                            │
-├──────────────┬──────────────────────────────┬───────────────────┤
-│              │                              │                   │
-│   左侧面板   │          中间画布            │    右侧面板       │
-│              │                              │                   │
-│ ┌──────────┐ │ ┌──────────────────────────┐ │ ┌───────────────┐ │
-│ │组件库    │ │ │     画布容器             │ │ │  配置面板     │ │
-│ │- 图表组件│ │ │  ┌─────────────────────┐ │ │ │ ┌───────────┐ │ │
-│ │- 控件组件│ │ │  │  avue-draggable     │ │ │ │ │数据配置  │ │ │
-│ │- 筛选组件│ │ │  │  (可拖拽图表组件)   │ │ │ │ │样式配置  │ │ │
-│ └──────────┘ │ │  └─────────────────────┘ │ │ │ │动作配置  │ │ │
-│              │ │                          │ │ │ └───────────┘ │ │
-│ ┌──────────┐ │ │ ┌─────────────────────┐  │ │ └───────────────┘ │
-│ │画板列表  │ │ │ │     图表实例        │  │ │                   │
-│ │- 页面管理│ │ │ │  - ECharts图表      │  │ │                   │
-│ │- 画板切换│ │ │ │  - 表格组件         │  │ │                   │
-│ └──────────┘ │ │ │  - 控件组件         │  │ │                   │
-│              │ │ └─────────────────────┘  │ │                   │
-│              │ └──────────────────────────┘ │                   │
-└──────────────┴──────────────────────────────┴───────────────────┘
-```
+[![BI 平台设计图.jpg](https://img.picui.cn/free/2025/07/10/686f1c09a3148.jpg)](https://img.picui.cn/free/2025/07/10/686f1c09a3148.jpg)
 
 #### 分层架构设计
 
-```
-┌─────────────────────────────────────┐
-│           展示层 (Presentation)      │
-│  ┌─────────────┐ ┌─────────────────┐ │
-│  │  组件面板   │ │   配置面板      │ │
-│  │  画布容器   │ │   图表组件      │ │
-│  └─────────────┘ └─────────────────┘ │
-├─────────────────────────────────────┤
-│           业务逻辑层 (Service)       │
-│  ┌─────────────┐ ┌─────────────────┐ │
-│  │ 图表服务    │ │   数据服务      │ │
-│  │ 拖拽服务    │ │   筛选服务      │ │
-│  └─────────────┘ └─────────────────┘ │
-├─────────────────────────────────────┤
-│           状态管理层 (Store)         │
-│  ┌─────────────┐ ┌─────────────────┐ │
-│  │ GlobalStorer│ │   Mutations     │ │
-│  └─────────────┘ └─────────────────┘ │
-├─────────────────────────────────────┤
-│           数据访问层 (API)           │
-│  ┌─────────────┐ ┌─────────────────┐ │
-│  │  数据接口   │ │   配置接口      │ │
-│  └─────────────┘ └─────────────────┘ │
-└─────────────────────────────────────┘
-```
+[![分层设计图.jpg](https://img.picui.cn/free/2025/07/10/686f1c0990d07.jpg)](https://img.picui.cn/free/2025/07/10/686f1c0990d07.jpg)
 
-### 核心技术栈选型
+### 核心技术栈
 
-经过充分的技术调研，我们选择了以下技术栈：
+到手的项目选型如下：
 
-- **前端框架**：Vue 2.x + Vue Router 3.x
+- **前端框架**：Vue 2.6 + Vue Router 3.x
 - **UI 组件库**：Element UI 2.x
 - **图表库**：ECharts 5.x
-- **状态管理**：自定义 Observable 状态管理
-- **构建工具**：Vue CLI 4.x + Webpack
+- **状态管理**：使用 Vue2.6 新增的自定义 Observable 状态管理
+- **构建工具**：Vue CLI 4.x
 - **编程语言**：TypeScript
 
 **选型特点：**
@@ -97,7 +51,6 @@ slug: 'enterprise-bi-platform'
 1. **Vue.js**：渐进式框架，学习成本低，生态成熟
 2. **ECharts**：功能强大，图表类型丰富，性能优秀
 3. **TypeScript**：提供类型安全，提升代码质量
-4. **自定义状态管理**：相比 Vuex，更适合复杂的图表交互场景
 
 ## 三面板核心实现
 
@@ -468,16 +421,7 @@ export default class Bar extends Base {
 - **易于扩展**：新增图表类型只需继承基类并实现特有逻辑
 - **类型安全**：TypeScript 提供编译时类型检查
 
-### 6. 自定义状态管理系统
-
-#### 为什么选择自定义状态管理？
-
-在复杂的 BI 系统中，我们发现传统的 Vuex 存在一些局限性：
-
-1. **状态结构复杂**：图表间的关联关系难以用扁平化状态表示
-2. **性能问题**：频繁的状态更新可能导致不必要的组件重渲染
-3. **调试困难**：复杂的异步操作链路难以追踪
-4. **三面板协同**：需要处理左侧组件库、中间画布、右侧配置面板的复杂交互
+### 2. 自定义状态管理系统
 
 #### GlobalStorer 架构实现
 
@@ -592,15 +536,7 @@ const updateChartConfig = (config) => {
 }
 ```
 
-**核心优势：**
-
-- **响应式更新**：基于 Vue 3 的响应式系统，自动追踪依赖关系
-- **单例模式**：确保全局状态一致性，避免状态冲突
-- **简化调试**：直接的状态变更，易于追踪和调试
-- **高性能**：精确的依赖追踪，减少不必要的重渲染
-- **三面板协同**：专门设计用于处理复杂的面板间交互
-
-### 7. 数据处理与图表渲染
+### 3. 数据处理与图表渲染
 
 #### 三面板数据流架构
 
@@ -941,6 +877,8 @@ export const handleDrill = async (currentChart, chartTarget, drills, storer) => 
 
 ### 1. 数据缓存策略
 
+优化数据请求，避免重复请求，提高页面加载效率。
+
 ```typescript
 // services/data.service.ts
 export const getDataDetail = async (analysisModelId: string) => {
@@ -961,25 +899,9 @@ export const getDataDetail = async (analysisModelId: string) => {
 }
 ```
 
-### 2. 大数据量渲染优化
+### 2. 图表渲染性能优化
 
-```typescript
-// 虚拟滚动实现
-const virtualScrollConfig = {
-	itemHeight: 40,
-	visibleCount: Math.ceil(containerHeight / 40),
-	bufferCount: 5
-}
-
-// 只渲染可见区域的数据
-const visibleData = computed(() => {
-	const start = Math.max(0, scrollTop.value - bufferCount)
-	const end = Math.min(data.length, start + visibleCount + bufferCount * 2)
-	return data.slice(start, end)
-})
-```
-
-### 3. 图表渲染性能优化
+通过防抖处理图表更新，减少不必要的渲染，提高图表渲染性能。
 
 ```typescript
 // 防抖处理图表更新
@@ -991,11 +913,40 @@ const debouncedUpdate = _.debounce((chart, data) => {
 const ChartComponent = () => import(`@/components/charts/${chartType}`)
 ```
 
+### 3.webpack 构建产物分包
+
+通过 webpack 构建产物分包，减少首屏加载时间。
+
+```js
+// vue.config.js
+module.exports = {
+	configureWebpack: {
+		optimization: {
+			splitChunks: {
+				chunks: 'all', // 对所有类型的代码块（同步 + 异步）都进行代码分割
+				minSize: 300000, // 当模块大于 300KB 时才进行提取，防止生成太多小文件
+				maxInitialRequests: 5, // 页面初始加载时最大并行请求数，防止首屏加载过多请求
+				cacheGroups: {
+					vendor: {
+						test: /[\\/]node_modules[\\/]/, // 匹配 node_modules 中的依赖
+						name(module) {
+							// 动态命名每个拆分出来的模块
+							const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1] // 从模块路径中提取包名
+							return packageName.replace('@', '') // 去除包名前的 @，防止命名冲突
+						}
+					}
+				}
+			}
+		}
+	}
+}
+```
+
 ## 项目架构演进
 
 ### 初期架构问题
 
-在项目初期，我们遇到了一些架构问题：
+在项目初期，笔者团队遇到了一些架构问题：
 
 1. **组件耦合度高**：图表组件直接调用 API，难以复用
 2. **状态管理混乱**：没有统一的状态管理机制
@@ -1003,7 +954,7 @@ const ChartComponent = () => import(`@/components/charts/${chartType}`)
 
 ### 重构方案
 
-我们进行了系统性的重构：
+笔者团队进行了系统性的重构：
 
 ```typescript
 // 重构前：组件直接调用 API
@@ -1014,7 +965,7 @@ export default {
 	}
 }
 
-// 重构后：通过服务层抽象
+// 重构后：通过 api 层抽象
 export default {
 	async mounted() {
 		const data = await chartDataService.getChartData(this.chartConfig)
@@ -1025,7 +976,7 @@ export default {
 
 ### 服务层设计
 
-我们引入了完整的服务层架构：
+笔者团队将 api 层分类，方便管理维护：
 
 ```typescript
 // services/index.js
@@ -1060,17 +1011,7 @@ beforeDestroy() {
 }
 ```
 
-### 2. 大数据量渲染性能问题
-
-**问题描述**：数据量超过 1 万条时页面卡顿严重
-
-**解决方案**：
-
-- 实现数据分页加载
-- 使用虚拟滚动技术
-- 图表数据采样显示
-
-### 3. 状态管理复杂度问题
+### 2. 状态管理复杂度问题
 
 **问题描述**：图表间联动关系复杂，状态难以维护
 
@@ -1109,150 +1050,22 @@ interface ChartConfig<T extends ChartType> {
 }
 ```
 
-## 企业级特性实现
-
-### 1. 多租户支持
-
-```typescript
-// 租户隔离中间件
-const tenantMiddleware = (req, res, next) => {
-	const tenantId = req.headers['x-tenant-id']
-	req.tenantId = tenantId
-	next()
-}
-
-// 数据查询时自动添加租户过滤
-const addTenantFilter = (query, tenantId) => {
-	return {
-		...query,
-		filters: [...query.filters, { field: 'tenant_id', value: tenantId }]
-	}
-}
-```
-
-### 2. 权限管理
-
-```typescript
-// 基于角色的权限控制
-const hasPermission = (user, resource, action) => {
-	return user.roles.some((role) =>
-		role.permissions.some(
-			(permission) => permission.resource === resource && permission.actions.includes(action)
-		)
-	)
-}
-
-// 组件级权限控制
-const PermissionWrapper = {
-	functional: true,
-	render(h, { props, children }) {
-		if (hasPermission(props.user, props.resource, props.action)) {
-			return children
-		}
-		return null
-	}
-}
-```
-
-## 部署与运维
-
-### 1. 构建优化
-
-```javascript
-// vue.config.js
-module.exports = {
-	configureWebpack: {
-		optimization: {
-			splitChunks: {
-				chunks: 'all',
-				minSize: 300000,
-				maxInitialRequests: 5,
-				cacheGroups: {
-					vendor: {
-						test: /[\\/]node_modules[\\/]/,
-						name(module) {
-							const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-							return packageName.replace('@', '')
-						}
-					}
-				}
-			}
-		}
-	}
-}
-```
-
-### 2. Docker 容器化
-
-```dockerfile
-# Dockerfile
-FROM node:14-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-### 3. 监控告警
-
-```typescript
-// 性能监控
-const performanceMonitor = {
-	trackChartRender(chartId, renderTime) {
-		if (renderTime > 1000) {
-			console.warn(`Chart ${chartId} render time: ${renderTime}ms`)
-			// 发送告警
-			this.sendAlert('SLOW_RENDER', { chartId, renderTime })
-		}
-	},
-
-	trackError(error, context) {
-		// 错误上报
-		this.reportError({
-			message: error.message,
-			stack: error.stack,
-			context,
-			timestamp: Date.now()
-		})
-	}
-}
-```
-
 ## 总结与展望
 
 ### 项目成果
 
-经过一年多的开发和迭代，我们成功构建了一个功能完整的企业级 BI 平台：
-
-#### 三面板架构优势
-
-- **直观的用户体验**：左侧组件库 + 中间画布 + 右侧配置的经典布局，符合用户操作习惯
-- **高效的工作流程**：拖拽式操作，从组件选择到数据配置再到样式调整，一气呵成
-- **强大的交互能力**：支持组件间联动、下钻分析、实时筛选等复杂 BI 功能
-- **灵活的扩展性**：模块化设计，易于添加新的图表类型和功能组件
+经过一年多的开发和迭代，笔者独立维护了一个功能完整的企业级 BI 平台：
 
 #### 核心功能特性
 
 - **功能完整性**：支持 20+ 种图表类型，覆盖柱状图、折线图、饼图、散点图、地图等主流场景
-- **性能表现**：支持万级数据量的流畅渲染，优化的拖拽和网格布局系统
 - **用户体验**：所见即所得的设计器，直观的拖拽式数据配置
-- **企业级特性**：多租户、权限管理、高可用部署，满足企业级应用需求
 
 ### 技术收获
 
-1. **三面板架构设计**：深入理解经典 BI 设计器的架构模式和交互逻辑
-2. **拖拽交互系统**：掌握复杂拖拽场景的技术实现，包括数据传递和状态同步
-3. **自定义状态管理**：针对复杂业务场景设计专用状态管理系统
-4. **组件化架构**：构建可复用、可扩展的图表组件体系
-5. **性能优化实践**：大数据量场景下的前端渲染优化和交互优化
+1. **拖拽交互系统**：深入理解经典 BI 设计器的架构模式和交互逻辑，掌握复杂拖拽场景的技术实现，包括数据传递和状态同步
+2. **自定义状态管理**：针对复杂业务场景设计专用状态管理系统
+3. **组件化架构**：构建可复用、可扩展的图表组件体系
 
 ### 未来规划
 
@@ -1263,17 +1076,9 @@ const performanceMonitor = {
    - 集成 WebGL 支持更复杂的 3D 可视化
 
 2. **功能扩展**：
-
    - 实时数据流处理
    - 移动端适配
-   - 图表组件库开源
-
-3. **开源计划**：
-   - 提取通用组件库开源
-   - 分享最佳实践和设计模式
 
 ## 写在最后
 
-构建企业级 BI 平台是一个复杂的系统工程，需要在功能完整性、性能、用户体验和技术架构之间找到平衡。希望我们的实践经验能为同样在做数据可视化项目的团队提供一些参考和启发。
-
-技术选型没有银弹，架构设计需要结合具体业务场景。最重要的是保持技术敏感度，持续学习和改进，才能构建出真正有价值的产品。
+构建企业级 BI 平台是一个复杂的系统工程。希望笔者的实践经验能为同样在做数据可视化项目的团队提供一些参考和启发。谢谢观看！

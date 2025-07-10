@@ -80,10 +80,10 @@ export function paginate<T>(items: T[], page: number, perPage: number) {
 }
 
 // 处理文章数据的辅助函数
-export function processPostData(posts: any[]): BlogPost[] {
-	return posts
-		.map((post) => {
-			const content = post.compiledContent()
+export async function processPostData(posts: any[]): Promise<BlogPost[]> {
+	const processedPosts = await Promise.all(
+		posts.map(async (post) => {
+			const content = await post.compiledContent()
 			return {
 				slug:
 					post.file
@@ -105,6 +105,9 @@ export function processPostData(posts: any[]): BlogPost[] {
 				wordCount: calculateWordCount(content)
 			}
 		})
+	)
+
+	return processedPosts
 		.filter((post) => !post.draft)
 		.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime())
 }
