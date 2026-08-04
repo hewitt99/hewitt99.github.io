@@ -49,20 +49,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 		<link rel='preconnect' href='https://fonts.googleapis.com' />
 		<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
 		<link
-			href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+			href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap'
 			rel='stylesheet'
 		/>
 
 		<!-- Theme Script (prevent FOUC) -->
 		<script is:inline>
-			const theme = localStorage.getItem('theme') || 'light'
-			if (theme === 'dark') {
-				document.documentElement.classList.add('dark')
-			}
+			;(function () {
+				const key = 'theme'
+				const stored = localStorage.getItem(key)
+				const preference =
+					stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system'
+				const isDark =
+					preference === 'dark' ||
+					(preference === 'system' &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches)
+				document.documentElement.classList.toggle('dark', isDark)
+			})()
 		</script>
 	</head>
 
-	<body class='flex min-h-screen flex-col'>
+	<body class='flex min-h-screen flex-col bg-background text-foreground'>
 		<Header />
 
 		<main class='flex-grow'>
@@ -70,8 +77,5 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 		</main>
 
 		<Footer />
-
-		<!-- Analytics (可选) -->
-		<!-- 在这里添加 Google Analytics 或其他分析工具 -->
 	</body>
 </html>

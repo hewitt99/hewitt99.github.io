@@ -12,14 +12,14 @@ slug: 'enterprise-bi-platform'
 
 ## 背景与挑战
 
+公司的前辈构建了一个基于 Vue2.js 的现代化 BI 平台，笔者在此基础上进行改造和优化。
+
 面临的核心挑战包括：
 
 - **功能复杂性**：需要支持 20+种图表类型，满足不同业务场景
 - **交互丰富性**：实现下钻、联动、筛选等高级分析功能
 - **性能要求**：处理大数据量、多图表及其联动时保持流畅的用户体验
 - **扩展性**：支持快速添加新的图表类型和业务功能
-
-最终公司的前辈构建了一个基于 Vue2.js 的现代化 BI 平台，笔者在此基础上进行改造和优化。
 
 ## 技术架构设计
 
@@ -29,11 +29,11 @@ slug: 'enterprise-bi-platform'
 
 #### 三面板布局架构
 
-[![BI 平台设计图.jpg](https://img.picui.cn/free/2025/07/10/686f1c09a3148.jpg)](https://img.picui.cn/free/2025/07/10/686f1c09a3148.jpg)
+[![BI 平台设计图.jpg](https://free.picui.cn/free/2025/07/10/686f1c09a3148.jpg)](https://free.picui.cn/free/2025/07/10/686f1c09a3148.jpg)
 
 #### 分层架构设计
 
-[![分层设计图.jpg](https://img.picui.cn/free/2025/07/10/686f1c0990d07.jpg)](https://img.picui.cn/free/2025/07/10/686f1c0990d07.jpg)
+[![分层设计图.jpg](https://free.picui.cn/free/2025/07/10/686f1c0990d07.jpg)](https://free.picui.cn/free/2025/07/10/686f1c0990d07.jpg)
 
 ### 核心技术栈
 

@@ -12,8 +12,8 @@ const tags = getTagsFromPosts(posts)
 	<div class='mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8'>
 		<!-- Page Header -->
 		<header class='mb-12 text-center'>
-			<h1 class='mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl'>文章标签</h1>
-			<p class='text-xl text-gray-600 dark:text-gray-400'>
+			<h1 class='mb-4 text-4xl font-bold text-foreground md:text-5xl'>文章标签</h1>
+			<p class='text-xl text-muted-foreground'>
 				共 {tags.length} 个标签，{posts.length} 篇文章
 			</p>
 		</header>
@@ -25,13 +25,13 @@ const tags = getTagsFromPosts(posts)
 					{tags.map((tag) => (
 						<a
 							href={`/tags/${tag.slug}`}
-							class='group inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 transition-all duration-200 hover:border-blue-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600 dark:hover:bg-gray-700'
+							class='group inline-flex cursor-pointer items-center rounded-md border border-border bg-card px-4 py-2 transition-all duration-200 hover:border-accent/40 hover:bg-secondary'
 							style={`font-size: ${Math.min(1.5, 0.8 + (tag.count / Math.max(...tags.map((t) => t.count))) * 0.7)}rem;`}
 						>
-							<span class='font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-300 dark:group-hover:text-blue-400'>
+							<span class='font-medium text-secondary-foreground transition-colors duration-200 group-hover:text-accent'>
 								#{tag.name}
 							</span>
-							<span class='ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-700 dark:bg-gray-700 dark:text-gray-400 dark:group-hover:bg-blue-900 dark:group-hover:text-blue-300'>
+							<span class='ml-2 rounded-md border border-border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-colors duration-200 group-hover:border-accent/40'>
 								{tag.count}
 							</span>
 						</a>
@@ -40,7 +40,7 @@ const tags = getTagsFromPosts(posts)
 			) : (
 				<div class='py-16 text-center'>
 					<svg
-						class='mx-auto mb-4 h-16 w-16 text-gray-400 dark:text-gray-600'
+						class='mx-auto mb-4 h-16 w-16 text-muted-foreground'
 						fill='none'
 						stroke='currentColor'
 						viewBox='0 0 24 24'
@@ -52,8 +52,8 @@ const tags = getTagsFromPosts(posts)
 							d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'
 						/>
 					</svg>
-					<h3 class='mb-2 text-xl font-medium text-gray-900 dark:text-white'>暂无标签</h3>
-					<p class='text-gray-600 dark:text-gray-400'>还没有任何文章标签。</p>
+					<h3 class='mb-2 text-xl font-medium text-foreground'>暂无标签</h3>
+					<p class='text-muted-foreground'>还没有任何文章标签。</p>
 				</div>
 			)
 		}
@@ -62,7 +62,7 @@ const tags = getTagsFromPosts(posts)
 		{
 			tags.length > 0 && (
 				<section class='mt-16'>
-					<h2 class='mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white'>
+					<h2 class='mb-8 text-center text-2xl font-bold text-foreground'>
 						热门标签
 					</h2>
 					<div class='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
@@ -70,14 +70,14 @@ const tags = getTagsFromPosts(posts)
 							.sort((a, b) => b.count - a.count)
 							.slice(0, 6)
 							.map((tag) => (
-								<a href={`/tags/${tag.slug}`} class='card p-4'>
+								<a href={`/tags/${tag.slug}`} class='card cursor-pointer p-4'>
 									<div class='flex items-center justify-between'>
-										<h3 class='text-lg font-semibold text-gray-900 dark:text-white'>#{tag.name}</h3>
-										<span class='rounded-full bg-blue-100 px-2.5 py-0.5 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200'>
+										<h3 class='text-lg font-semibold text-foreground'>#{tag.name}</h3>
+										<span class='rounded-md border border-border bg-secondary px-2.5 py-0.5 text-sm font-medium text-secondary-foreground'>
 											{tag.count}
 										</span>
 									</div>
-									<p class='mt-2 text-sm text-gray-600 dark:text-gray-400'>{tag.count} 篇文章</p>
+									<p class='mt-2 text-sm text-muted-foreground'>{tag.count} 篇文章</p>
 								</a>
 							))}
 					</div>

@@ -3,174 +3,194 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-  
-  body {
-    @apply text-gray-900 dark:text-gray-100;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-    min-height: 100vh;
-  }
-  
-  .dark body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  }
+	:root {
+		--background: 210 40% 98%;
+		--foreground: 222 47% 11%;
+		--card: 0 0% 100%;
+		--card-foreground: 222 47% 11%;
+		--muted: 215 16% 47%;
+		--muted-foreground: 215 16% 47%;
+		--border: 214 32% 91%;
+		--accent: 221 83% 53%;
+		--accent-foreground: 0 0% 100%;
+		--primary: 221 83% 53%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 210 40% 96%;
+		--secondary-foreground: 222 47% 11%;
+		--ring: 221 83% 53%;
+		--radius: 0.5rem;
+		color-scheme: light dark;
+	}
+
+	.dark {
+		--background: 222 47% 7%;
+		--foreground: 210 40% 98%;
+		--card: 217 33% 12%;
+		--card-foreground: 210 40% 98%;
+		--muted: 215 20% 65%;
+		--muted-foreground: 215 20% 65%;
+		--border: 217 19% 27%;
+		--accent: 213 94% 68%;
+		--accent-foreground: 222 47% 7%;
+		--primary: 213 94% 68%;
+		--primary-foreground: 222 47% 7%;
+		--secondary: 217 33% 14%;
+		--secondary-foreground: 210 40% 98%;
+		--ring: 213 94% 68%;
+	}
+
+	html {
+		@apply scroll-smooth;
+	}
+
+	body {
+		@apply bg-background font-sans text-foreground antialiased;
+		min-height: 100vh;
+	}
+
+	main {
+		animation: main-enter 200ms ease-out;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+
+		main {
+			animation: none;
+		}
+
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			transition-duration: 0.01ms !important;
+		}
+
+		.reveal {
+			opacity: 1 !important;
+			transform: none !important;
+		}
+	}
 }
 
 @layer components {
-  .prose-custom {
-    @apply prose prose-lg dark:prose-invert max-w-none;
-    @apply prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100;
-    @apply prose-p:text-gray-700 dark:prose-p:text-gray-300;
-    @apply prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline;
-    @apply prose-strong:text-gray-900 dark:prose-strong:text-gray-100;
-    @apply prose-code:text-pink-600 dark:prose-code:text-pink-400;
-    @apply prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800;
-    @apply prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20;
-  }
-  
-  /* Apple-style Card Design */
-  .card {
-    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0;
-    border-radius: 16px;
-    box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.08),
-      0 1px 3px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 
-      0 20px 40px rgba(0, 0, 0, 0.12),
-      0 8px 16px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  
-  .dark .card {
-    @apply bg-gray-800/70;
-    box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.3),
-      0 1px 3px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  
-  .dark .card:hover {
-    box-shadow: 
-      0 20px 40px rgba(0, 0, 0, 0.4),
-      0 8px 16px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Apple-style Buttons */
-  .btn-primary {
-    @apply bg-blue-600/90 hover:bg-blue-700/90 text-white font-medium py-3 px-6 backdrop-blur-xl border-0;
-    border-radius: 12px;
-    box-shadow: 
-      0 4px 16px rgba(59, 130, 246, 0.3),
-      0 1px 3px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 
-      0 8px 24px rgba(59, 130, 246, 0.4),
-      0 4px 8px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-100/80 hover:bg-gray-200/80 dark:bg-gray-700/80 dark:hover:bg-gray-600/80 text-gray-900 dark:text-gray-100 font-medium py-3 px-6 backdrop-blur-xl border-0;
-    border-radius: 12px;
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.05),
-      0 1px 3px rgba(0, 0, 0, 0.03),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .btn-secondary:hover {
-    transform: translateY(-1px);
-    box-shadow: 
-      0 4px 16px rgba(0, 0, 0, 0.08),
-      0 2px 6px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Apple-style Tags */
-  .tag {
-    @apply inline-block bg-gray-100/80 dark:bg-gray-700/80 text-gray-700 dark:text-gray-300 text-sm px-4 py-2 backdrop-blur-xl border-0;
-    border-radius: 20px;
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  
-  .tag:hover {
-    @apply bg-gray-200/80 dark:bg-gray-600/80;
-    transform: translateY(-1px);
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-  
-  /* Apple-style Icon Buttons */
-  .apple-button {
-    @apply bg-gray-100/80 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 backdrop-blur-xl;
-    border-radius: 10px;
-    box-shadow: 
-      0 2px 8px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-  }
-  
-  .dark .apple-button {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  
-  .apple-button:hover {
-    @apply bg-gray-300/80 dark:bg-gray-600/70;
-    transform: translateY(-1px);
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  }
+	.prose-custom {
+		@apply prose max-w-none dark:prose-invert;
+		@apply prose-headings:mb-3 prose-headings:mt-6 prose-headings:font-sans prose-headings:font-semibold prose-headings:scroll-mt-24 prose-headings:text-foreground;
+		@apply prose-h1:mt-8 prose-h2:mt-7 prose-h3:mt-6;
+		@apply prose-p:my-3 prose-p:leading-normal prose-p:text-foreground/90;
+		@apply prose-a:text-accent prose-a:no-underline hover:prose-a:underline;
+		@apply prose-strong:text-foreground;
+		@apply prose-code:before:content-none prose-code:after:content-none;
+		@apply prose-ul:my-3 prose-ol:my-3 prose-li:my-0.5 prose-li:leading-normal;
+		@apply prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:rounded-lg prose-pre:border prose-pre:border-border prose-pre:font-mono prose-pre:text-sm;
+		@apply prose-blockquote:my-4 prose-blockquote:border-border prose-blockquote:border-l-accent prose-blockquote:bg-secondary/50;
+		@apply prose-img:mx-auto prose-img:rounded-md prose-img:border prose-img:border-border;
+		@apply prose-table:border-border prose-th:border prose-th:border-border prose-th:bg-secondary prose-td:border prose-td:border-border;
+	}
+
+	/* Inline code only — never paint backgrounds onto Shiki tokens inside <pre> */
+	.prose-custom :not(pre) > code {
+		@apply rounded bg-secondary px-1.5 py-0.5 font-mono text-sm font-normal text-foreground;
+	}
+
+	.prose-custom pre code {
+		@apply p-0 font-mono text-sm font-normal;
+		background-color: transparent !important;
+		background-image: none !important;
+		color: inherit;
+	}
+
+	/* Prevent typography invert from washing Shiki block backgrounds */
+	.prose-custom pre.astro-code {
+		background-color: var(--shiki-light-bg) !important;
+	}
+
+	/* Shiki dual themes — sync with html.dark (class strategy) */
+	html.dark .astro-code,
+	html.dark .astro-code span {
+		color: var(--shiki-dark) !important;
+		background-color: var(--shiki-dark-bg) !important;
+		font-style: var(--shiki-dark-font-style) !important;
+		font-weight: var(--shiki-dark-font-weight) !important;
+		text-decoration: var(--shiki-dark-text-decoration) !important;
+	}
+
+	.card {
+		@apply rounded-lg border border-border bg-card text-card-foreground transition-colors duration-150;
+	}
+
+	.card:hover {
+		@apply border-accent/40;
+	}
+
+	.btn-primary {
+		@apply inline-flex cursor-pointer items-center justify-center rounded-md bg-accent px-5 py-2.5 font-medium text-accent-foreground transition-opacity duration-150 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+	}
+
+	.btn-secondary {
+		@apply inline-flex cursor-pointer items-center justify-center rounded-md border border-border bg-secondary px-5 py-2.5 font-medium text-secondary-foreground transition-colors duration-150 hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+	}
+
+	.tag {
+		@apply inline-block cursor-pointer rounded border border-border bg-transparent px-2 py-0.5 font-mono text-xs text-muted-foreground transition-colors duration-150 hover:border-accent/40 hover:text-accent;
+	}
+
+	.reveal {
+		opacity: 0;
+		transform: translateY(8px);
+		transition:
+			opacity 220ms ease-out,
+			transform 220ms ease-out;
+		transition-delay: var(--delay, 0ms);
+	}
+
+	.reveal-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.toc-link {
+		@apply block border-l-2 border-transparent py-1 pl-3 text-sm text-muted-foreground transition-colors duration-150 hover:text-accent;
+	}
+
+	.toc-link-active {
+		@apply border-accent text-accent;
+	}
+
+	.list-row {
+		@apply block cursor-pointer rounded-lg border border-border bg-card p-4 transition-colors duration-150 hover:border-accent/40 md:p-5;
+	}
 }
 
-/* 代码高亮样式 */
-pre[class*="language-"] {
-  @apply rounded-lg p-4 overflow-x-auto;
+@keyframes main-enter {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
-code[class*="language-"] {
-  @apply text-sm;
+pre.astro-code {
+	@apply overflow-x-auto rounded-lg border border-border p-4 font-mono text-sm;
 }
 
-/* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+	width: 8px;
+	height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+	@apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+	@apply rounded-full bg-border;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
-} 
+	@apply bg-muted;
+}

@@ -1,112 +1,89 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import Pagination from '../components/Pagination.astro';
-import { processPostData, paginate } from '../utils';
-import { SITE_CONFIG } from '../config';
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ArticleListItem from '../components/ArticleListItem.astro'
+import Pagination from '../components/Pagination.astro'
+import { processPostData, paginate } from '../utils'
+import { SITE_CONFIG } from '../config'
 
-// 获取所有文章
-const allPosts = Object.values(import.meta.glob('../content/blog/*.{md,mdx}', { eager: true }));
-const posts = await processPostData(allPosts);
+const allPosts = Object.values(import.meta.glob('../content/blog/*.{md,mdx}', { eager: true }))
+const posts = await processPostData(allPosts)
 
-// 分页
-const currentPage = 1;
-const paginatedPosts = paginate(posts, currentPage, SITE_CONFIG.postsPerPage);
+const currentPage = 1
+const paginatedPosts = paginate(posts, currentPage, SITE_CONFIG.postsPerPage)
+
+const pagePosts = paginatedPosts.data
+const featuredPost = pagePosts[0]
+const gridPosts = pagePosts.slice(1)
+const categoryCount = new Set(posts.map((post) => post.category)).size
+const tagCount = new Set(posts.flatMap((post) => post.tags)).size
 ---
 
 <BaseLayout>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Hero Section -->
-    <section class="text-center mb-16">
-      <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-        欢迎来到我的博客
-      </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8">
-        {SITE_CONFIG.description}
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/categories" class="btn-primary">
-          浏览分类
-        </a>
-        <a href="/tags" class="btn-secondary">
-          查看标签
-        </a>
-      </div>
-    </section>
-    
-    <!-- Stats Section -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-          {posts.length}
-        </div>
-        <div class="text-gray-600 dark:text-gray-400">
-          篇文章
-        </div>
-      </div>
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
-          {new Set(posts.map(post => post.category)).size}
-        </div>
-        <div class="text-gray-600 dark:text-gray-400">
-          个分类
-        </div>
-      </div>
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-          {new Set(posts.flatMap(post => post.tags)).size}
-        </div>
-        <div class="text-gray-600 dark:text-gray-400">
-          个标签
-        </div>
-      </div>
-    </section>
-    
-    <!-- Latest Posts Section -->
-    <section>
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
-          最新文章
-        </h2>
-        {paginatedPosts.totalPages > 1 && (
-          <a href="/page/2" class="text-blue-600 dark:text-blue-400 hover:underline">
-            查看更多 →
-          </a>
-        )}
-      </div>
-      
-{paginatedPosts.data.length > 0 ? (
-        <div>
-          <!-- Posts Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {paginatedPosts.data.map((post) => (
-              <ArticleCard post={post} />
-            ))}
-          </div>
-          
-          <!-- Pagination -->
-          <Pagination
-            currentPage={paginatedPosts.currentPage}
-            totalPages={paginatedPosts.totalPages}
-            hasNext={paginatedPosts.hasNext}
-            hasPrev={paginatedPosts.hasPrev}
-            nextPage={paginatedPosts.nextPage}
-            prevPage={paginatedPosts.prevPage}
-          />
-        </div>
-      ) : (
-        <div class="text-center py-16">
-          <svg class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">
-            暂无文章
-          </h3>
-          <p class="text-gray-600 dark:text-gray-400">
-            还没有发布任何文章，请稍后再来查看。
-          </p>
-        </div>
-      )}
-    </section>
-  </div>
-</BaseLayout> 
+	<div class='mx-auto max-w-3xl px-4 py-8 sm:px-6 md:py-10 lg:px-8'>
+		<section class='reveal mb-6' style='--delay: 0ms'>
+			<h1 class='mb-2 text-2xl font-semibold tracking-tight text-foreground md:text-3xl'>
+				欢迎来到我的博客
+			</h1>
+			<p class='max-w-2xl text-base text-muted-foreground'>{SITE_CONFIG.description}</p>
+		</section>
+
+		<p class='reveal mb-8 text-sm text-muted-foreground' style='--delay: 40ms' aria-label='博客统计'>
+			<span class='font-mono text-foreground'>{posts.length}</span> 篇文章 ·
+			<span class='font-mono text-foreground'>{categoryCount}</span> 个分类 ·
+			<span class='font-mono text-foreground'>{tagCount}</span> 个标签
+		</p>
+
+		<section>
+			<div class='mb-5 flex items-center justify-between gap-4'>
+				<h2 class='text-lg font-semibold text-foreground md:text-xl'>最新文章</h2>
+				{
+					paginatedPosts.totalPages > 1 && (
+						<a
+							href='/page/2'
+							class='cursor-pointer text-sm text-accent transition-colors duration-150 hover:underline'
+						>
+							查看更多 →
+						</a>
+					)
+				}
+			</div>
+
+			{
+				featuredPost ? (
+					<>
+						<ArticleListItem post={featuredPost} featured delay={80} />
+
+						{gridPosts.length > 0 && (
+							<ul class='mb-10 space-y-3'>
+								{gridPosts.map((post, index) => (
+									<li>
+										<ArticleListItem post={post} delay={120 + index * 50} />
+									</li>
+								))}
+							</ul>
+						)}
+
+						<Pagination
+							currentPage={paginatedPosts.currentPage}
+							totalPages={paginatedPosts.totalPages}
+							hasNext={paginatedPosts.hasNext}
+							hasPrev={paginatedPosts.hasPrev}
+							nextPage={paginatedPosts.nextPage}
+							prevPage={paginatedPosts.prevPage}
+						/>
+					</>
+				) : (
+					<div class='py-16 text-center'>
+						<h3 class='mb-2 text-xl font-medium text-foreground'>暂无文章</h3>
+						<p class='text-muted-foreground'>还没有发布任何文章，请稍后再来查看。</p>
+					</div>
+				)
+			}
+		</section>
+	</div>
+</BaseLayout>
+
+<script>
+	import { initReveals } from '../scripts/motion'
+	initReveals()
+</script>

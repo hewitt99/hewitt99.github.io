@@ -4,52 +4,75 @@ import { formatDate } from '../utils'
 
 export interface Props {
 	post: BlogPost
+	featured?: boolean
 }
 
-const { post } = Astro.props
+const { post, featured = false } = Astro.props
+
+const articleClass = featured
+	? 'card flex h-full flex-col p-6 md:p-8'
+	: 'card flex h-full flex-col p-6'
+
+const imageWrapClass = featured
+	? '-mx-6 -mt-6 mb-4 md:-mx-8 md:-mt-8'
+	: '-mx-6 -mt-6 mb-4'
+
+const imageClass = featured
+	? 'h-56 w-full rounded-t-lg object-cover md:h-72'
+	: 'h-48 w-full rounded-t-lg object-cover'
+
+const titleClass = featured
+	? 'mb-3 line-clamp-2 text-2xl font-bold text-foreground md:text-3xl'
+	: 'mb-3 line-clamp-2 text-xl font-bold text-foreground'
+
+const descriptionClass = featured
+	? 'mb-4 line-clamp-4 flex-grow text-muted-foreground'
+	: 'mb-4 line-clamp-3 flex-grow text-muted-foreground'
 ---
 
-<article class='card flex h-full flex-col p-6'>
-	<!-- Hero Image -->
+<article class={articleClass}>
 	{
 		post.heroImage && (
-			<div class='-mx-6 -mt-6 mb-4'>
+			<div class={imageWrapClass}>
 				<img
 					src={post.heroImage}
 					alt={post.title}
-					class='h-48 w-full rounded-t-lg object-cover'
-					loading='eager'
+					class={imageClass}
+					loading={featured ? 'eager' : 'lazy'}
 				/>
 			</div>
 		)
 	}
 
-	<!-- Category -->
-	<div class='mb-3'>
+	<div class='mb-3 flex items-center gap-2'>
+		{
+			featured && (
+				<span class='rounded-md border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent'>
+					最新
+				</span>
+			)
+		}
 		<a
 			href={`/categories/${post.category}`}
-			class='inline-block rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 transition-colors hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800'
+			class='inline-block cursor-pointer rounded-md border border-border bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground transition-colors duration-200 hover:border-accent/40'
 		>
 			{post.category}
 		</a>
 	</div>
 
-	<!-- Title -->
-	<h2 class='mb-3 line-clamp-2 text-xl font-bold text-gray-900 dark:text-white'>
+	<h2 class={titleClass}>
 		<a
 			href={`/blog/${post.slug}`}
-			class='transition-colors hover:text-blue-600 dark:hover:text-blue-400'
+			class='cursor-pointer transition-colors duration-200 hover:text-accent'
 		>
 			{post.title}
 		</a>
 	</h2>
 
-	<!-- Description -->
-	<p class='mb-4 line-clamp-3 flex-grow text-gray-600 dark:text-gray-400'>
+	<p class={descriptionClass}>
 		{post.description}
 	</p>
 
-	<!-- Tags -->
 	{
 		post.tags.length > 0 && (
 			<div class='mb-4'>
@@ -60,7 +83,7 @@ const { post } = Astro.props
 						</a>
 					))}
 					{post.tags.length > 3 && (
-						<span class='text-xs text-gray-500 dark:text-gray-500'>
+						<span class='text-xs text-muted-foreground'>
 							+{post.tags.length - 3} more
 						</span>
 					)}
@@ -69,15 +92,12 @@ const { post } = Astro.props
 		)
 	}
 
-	<!-- Meta Info -->
-	<div class='mt-auto flex items-center justify-between text-sm text-gray-500 dark:text-gray-500'>
-		<div class='flex items-center space-x-4'>
-			<!-- Date -->
+	<div class='mt-auto flex items-center justify-between text-sm text-muted-foreground'>
+		<div class='flex flex-wrap items-center gap-x-4 gap-y-1'>
 			<time datetime={post.publishDate.toISOString()}>
 				{formatDate(post.publishDate)}
 			</time>
 
-			<!-- Reading Time -->
 			{
 				post.readingTime && (
 					<span class='flex items-center'>
@@ -94,7 +114,6 @@ const { post } = Astro.props
 				)
 			}
 
-			<!-- Word Count -->
 			{
 				post.wordCount && (
 					<span class='flex items-center'>
@@ -125,6 +144,13 @@ const { post } = Astro.props
 	.line-clamp-3 {
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.line-clamp-4 {
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}

@@ -3,8 +3,8 @@ import { SITE_CONFIG } from '../config'
 ---
 
 <header
-	class='sticky top-0 z-50 bg-white/70 backdrop-blur-xl dark:bg-gray-900/70'
-	style='box-shadow: 0 1px 20px rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.1);'
+	id='site-header'
+	class='sticky top-0 z-50 border-b border-border/60 bg-background/80 transition-[background-color,border-color,box-shadow] duration-200 data-[scrolled=true]:border-border data-[scrolled=true]:bg-background data-[scrolled=true]:shadow-sm'
 >
 	<nav class='mx-auto max-w-6xl px-4 sm:px-6 lg:px-8'>
 		<div class='relative flex h-16 items-center justify-between'>
@@ -12,7 +12,7 @@ import { SITE_CONFIG } from '../config'
 			<div class='flex-shrink-0'>
 				<a
 					href='/'
-					class='text-xl font-bold text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400'
+					class='cursor-pointer text-xl font-semibold text-foreground transition-colors duration-150 hover:text-accent'
 				>
 					{SITE_CONFIG.title}
 				</a>
@@ -31,19 +31,28 @@ import { SITE_CONFIG } from '../config'
 			</div>
 
 			<!-- Theme Toggle & Mobile Menu Button -->
-			<div class='flex flex-shrink-0 items-center space-x-4'>
-				<!-- Theme Toggle -->
-				<button id='theme-toggle' class='apple-button p-2.5' aria-label='切换主题'>
+			<div class='flex flex-shrink-0 items-center space-x-3'>
+				<button
+					id='theme-toggle'
+					class='cursor-pointer rounded-md border border-border p-2 text-muted-foreground transition-colors duration-200 hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+					aria-label='切换主题'
+				>
 					<svg
-						id='theme-toggle-dark-icon'
+						id='theme-icon-system'
 						class='hidden h-5 w-5'
-						fill='currentColor'
-						viewBox='0 0 20 20'
+						fill='none'
+						stroke='currentColor'
+						viewBox='0 0 24 24'
 					>
-						<path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z'></path>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+						></path>
 					</svg>
 					<svg
-						id='theme-toggle-light-icon'
+						id='theme-icon-light'
 						class='hidden h-5 w-5'
 						fill='currentColor'
 						viewBox='0 0 20 20'
@@ -53,10 +62,17 @@ import { SITE_CONFIG } from '../config'
 							d='M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z'
 							clip-rule='evenodd'></path>
 					</svg>
+					<svg id='theme-icon-dark' class='hidden h-5 w-5' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z'></path>
+					</svg>
 				</button>
 
-				<!-- Mobile menu button -->
-				<button id='mobile-menu-button' class='apple-button p-2.5 md:hidden' aria-label='打开菜单'>
+				<button
+					id='mobile-menu-button'
+					class='cursor-pointer rounded-md border border-border p-2 text-muted-foreground transition-colors duration-200 hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden'
+					aria-label='打开菜单'
+				>
 					<svg class='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
 						<path
 							stroke-linecap='round'
@@ -82,52 +98,55 @@ import { SITE_CONFIG } from '../config'
 
 <style>
 	.nav-link {
-		@apply font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400;
+		@apply cursor-pointer font-medium text-muted-foreground transition-colors duration-200 hover:text-accent;
 	}
 
 	.mobile-nav-link {
-		@apply block rounded-lg px-3 py-2 font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-400;
+		@apply block cursor-pointer rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors duration-200 hover:bg-secondary hover:text-accent;
 	}
 </style>
 
 <script>
-	// Theme toggle functionality
+	import { getStoredTheme, cycleTheme, initThemeListener, type ThemePreference } from '../scripts/theme'
+
 	const themeToggle = document.getElementById('theme-toggle')
-	const darkIcon = document.getElementById('theme-toggle-dark-icon')
-	const lightIcon = document.getElementById('theme-toggle-light-icon')
+	const systemIcon = document.getElementById('theme-icon-system')
+	const lightIcon = document.getElementById('theme-icon-light')
+	const darkIcon = document.getElementById('theme-icon-dark')
 
-	// Check for saved theme preference or default to 'light'
-	const currentTheme = localStorage.getItem('theme') || 'light'
-
-	if (currentTheme === 'dark') {
-		document.documentElement.classList.add('dark')
-		darkIcon?.classList.add('hidden')
-		lightIcon?.classList.remove('hidden')
-	} else {
-		document.documentElement.classList.remove('dark')
-		darkIcon?.classList.remove('hidden')
-		lightIcon?.classList.add('hidden')
+	function updateIcons(preference: ThemePreference) {
+		systemIcon?.classList.toggle('hidden', preference !== 'system')
+		lightIcon?.classList.toggle('hidden', preference !== 'light')
+		darkIcon?.classList.toggle('hidden', preference !== 'dark')
+		const labels = {
+			system: '当前：跟随系统，点击切换为浅色',
+			light: '当前：浅色，点击切换为深色',
+			dark: '当前：深色，点击切换为跟随系统'
+		}
+		themeToggle?.setAttribute('aria-label', labels[preference])
 	}
 
-	themeToggle?.addEventListener('click', () => {
-		document.documentElement.classList.toggle('dark')
+	let preference = getStoredTheme()
+	updateIcons(preference)
 
-		if (document.documentElement.classList.contains('dark')) {
-			localStorage.setItem('theme', 'dark')
-			darkIcon?.classList.add('hidden')
-			lightIcon?.classList.remove('hidden')
-		} else {
-			localStorage.setItem('theme', 'light')
-			darkIcon?.classList.remove('hidden')
-			lightIcon?.classList.add('hidden')
-		}
+	themeToggle?.addEventListener('click', () => {
+		preference = cycleTheme(preference)
+		updateIcons(preference)
 	})
 
-	// Mobile menu toggle
+	initThemeListener(() => updateIcons(getStoredTheme()))
+
 	const mobileMenuButton = document.getElementById('mobile-menu-button')
 	const mobileMenu = document.getElementById('mobile-menu')
 
 	mobileMenuButton?.addEventListener('click', () => {
 		mobileMenu?.classList.toggle('hidden')
 	})
+
+	const siteHeader = document.getElementById('site-header')
+	const onScroll = () => {
+		siteHeader?.setAttribute('data-scrolled', window.scrollY > 8 ? 'true' : 'false')
+	}
+	onScroll()
+	window.addEventListener('scroll', onScroll, { passive: true })
 </script>

@@ -19,9 +19,14 @@ export default defineConfig({
 	markdown: {
 		syntaxHighlight: {
 			type: 'shiki',
-			theme: 'github-dark',
-			wrap: true,
 			excludeLangs: ['mermaid']
+		},
+		shikiConfig: {
+			themes: {
+				light: 'github-light',
+				dark: 'github-dark'
+			},
+			wrap: true
 		},
 		rehypePlugins: [rehypeMermaid]
 	},

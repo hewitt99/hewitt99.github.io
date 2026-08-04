@@ -59,7 +59,9 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans]
+				sans: ['"IBM Plex Sans"', ...fontFamily.sans],
+				serif: ['"IBM Plex Sans"', ...fontFamily.serif],
+				mono: ['"JetBrains Mono"', ...fontFamily.mono]
 			}
 		}
 	}
