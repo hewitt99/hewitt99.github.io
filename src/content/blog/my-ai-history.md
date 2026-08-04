@@ -1,11 +1,11 @@
 ---
-title: '编程里的 AI 演进浪潮'
+title: '我的 AI 使用历史'
 description: '2026 年是我使用 AI 的第三年。从 ChatGPT 到 Cursor，回看 AI 如何改变我的编程方式。'
 publishDate: '2026-08-04'
 category: '技术分享'
 tags: ['AI', 'ChatGPT', 'Cursor']
 author: 'Hewitt'
-slug: 'ai-wave-in-programming'
+slug: 'my-ai-history'
 ---
 
 # 我的 AI 使用历史
