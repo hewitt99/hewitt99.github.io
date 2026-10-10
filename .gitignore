@@ -1,3 +1,6 @@
+# Optional: keep reading notes local-only (uncomment if you do not want notes in a public repo)
+# src/content/notes/
+
 # build output
 dist/
 # generated types

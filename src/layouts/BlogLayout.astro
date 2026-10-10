@@ -15,11 +15,17 @@ export interface Props {
 	}
 	readingTime?: number
 	wordCount?: number
+	noteEntry?: {
+		slug: string
+		updatedDate?: string
+		title?: string
+	}
 }
 
-const { frontmatter, readingTime, wordCount } = Astro.props
+const { frontmatter, readingTime, wordCount, noteEntry } = Astro.props
 const publishDate = new Date(frontmatter.publishDate)
 const updatedDate = frontmatter.updatedDate ? new Date(frontmatter.updatedDate) : null
+const noteUpdated = noteEntry?.updatedDate ? new Date(noteEntry.updatedDate) : null
 ---
 
 <BaseLayout
@@ -93,6 +99,31 @@ const updatedDate = frontmatter.updatedDate ? new Date(frontmatter.updatedDate) 
 				<div class='prose-custom max-w-3xl'>
 					<slot />
 				</div>
+
+				{
+					noteEntry && (
+						<aside class='mt-10 max-w-3xl border-t border-border pt-6 text-sm text-muted-foreground'>
+							<p>
+								<span class='text-foreground'>碎碎念</span>
+								{noteUpdated && (
+									<>
+										{' · '}
+										<time datetime={noteUpdated.toISOString()}>
+											更新于 {formatDate(noteUpdated)}
+										</time>
+									</>
+								)}
+								{' · '}
+								<a
+									href={`/notes/${noteEntry.slug}`}
+									class='text-accent transition-colors duration-150 hover:underline'
+								>
+									查看阅读笔记
+								</a>
+							</p>
+						</aside>
+					)
+				}
 
 				<footer class='mt-12 max-w-3xl border-t border-border pt-8'>
 					<div class='flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>

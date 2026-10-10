@@ -58,11 +58,12 @@ src/
 │   └── tags/
 │       ├── index.astro       # 标签列表页
 │       └── [tag].astro       # 特定标签页
-├── content/           # 存放 Markdown 文章
-│   └── blog/
-│       ├── hello-world.md
-│       ├── javascript-tips.md
-│       └── react-hooks-guide.md
+├── content/           # 存放 Markdown 文章与碎碎念
+│   ├── blog/
+│   │   ├── hello-world.md
+│   │   └── …
+│   └── notes/         # 一文一笔记（文件名 = post slug）
+│       └── enterprise-bi-platform.md
 ├── styles/            # 全局 CSS/Tailwind config
 │   └── global.css
 ├── utils/             # 工具函数
@@ -145,7 +146,36 @@ heroImage: '/images/hero.jpg' # 可选
 - `author`: 作者名称（可选）
 - `heroImage`: 封面图片路径（可选）
 - `updatedDate`: 更新日期（可选）
-- `draft`: 是否为草稿，默认 false（可选）
+- `draft`: 是否为草稿，默认 false（可选）。生产构建不会生成草稿详情页；`astro dev` 可预览。
+
+### 按文章碎碎念（Reading Notes）
+
+一文一文件，挂在正式文章上，按日期块追加，不写进正文。
+
+1. 在 `src/content/notes/` 创建与文章 slug 同名的 `.md`（如 `enterprise-bi-platform.md`）
+2. Frontmatter 约定：
+
+```markdown
+---
+postSlug: enterprise-bi-platform
+title: 碎碎念 · 企业 BI 平台   # 可选
+visibility: private            # private | public，默认 private
+updatedDate: 2026-10-10
+---
+
+## 2026-10-10
+
+- 今天的碎碎念……
+```
+
+约定：
+
+- **一文一文件**；只追加 `## YYYY-MM-DD` 日期块（推荐最新在上）
+- `visibility: private`（默认）：生产 build **不**生成 `/notes/[slug]`，文章页也无入口；`astro dev`（或 `NOTE_VISIBILITY=all`）可本地预览全部
+- `visibility: public`：正常进生产站点
+- 公开仓库里 `private` 只挡站点 HTML，**源码仍可见**；敏感内容请勿 commit，或自行把 `src/content/notes/` 加入 `.gitignore`（见文件内注释）
+
+本地预览示例：文章 [/blog/enterprise-bi-platform](/blog/enterprise-bi-platform) → 笔记 [/notes/enterprise-bi-platform](/notes/enterprise-bi-platform)
 
 ## ⚙️ 配置
 

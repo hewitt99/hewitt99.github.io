@@ -1,33 +1,56 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro'
 import { calculateReadingTime, calculateWordCount } from '../../utils'
+import { getNoteByPostSlug, isNotePubliclyBuildable, noteSlug } from '../../utils/notes'
 
 export async function getStaticPaths() {
 	const allPosts: any[] = Object.values(
 		import.meta.glob('../../content/blog/*.{md,mdx}', { eager: true })
 	)
 
-	return allPosts.map((post: any) => ({
-		params: {
-			slug:
+	return allPosts
+		.filter((post: any) => {
+			const isDraft = Boolean(post.frontmatter?.draft)
+			// Match list filtering: drafts stay out of production builds; visible in astro dev.
+			if (isDraft && !import.meta.env.DEV) return false
+			return true
+		})
+		.map((post: any) => {
+			const slug =
 				post.file
 					.split('/')
 					.pop()
 					?.replace(/\.(md|mdx)$/, '') || ''
-		},
-		props: { post }
-	}))
+			const note = getNoteByPostSlug(slug)
+			const noteEntry =
+				note && isNotePubliclyBuildable(note.frontmatter || {})
+					? {
+							slug: noteSlug(note),
+							updatedDate: note.frontmatter?.updatedDate,
+							title: note.frontmatter?.title
+						}
+					: undefined
+
+			return {
+				params: { slug },
+				props: { post, noteEntry }
+			}
+		})
 }
 
-const { post } = Astro.props
+const { post, noteEntry } = Astro.props
 const { Content, frontmatter } = post
 
-// 计算文章统计信息
 const content = await post.compiledContent()
 const readingTime = calculateReadingTime(content)
 const wordCount = calculateWordCount(content)
 ---
 
-<BlogLayout frontmatter={frontmatter} readingTime={readingTime} wordCount={wordCount}>
+<BlogLayout
+	frontmatter={frontmatter}
+	readingTime={readingTime}
+	wordCount={wordCount}
+	noteEntry={noteEntry}
+>
 	<Content />
 </BlogLayout>

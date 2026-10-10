@@ -13,6 +13,15 @@ export interface BlogPost {
 	wordCount?: number
 }
 
+export type NoteVisibility = 'private' | 'public'
+
+export interface ReadingNote {
+	postSlug: string
+	title?: string
+	visibility: NoteVisibility
+	updatedDate?: Date
+}
+
 export interface Category {
 	name: string
 	slug: string
